@@ -24,7 +24,6 @@
             perspective: 1000px;
         }
 
-        /* Subtle background glow */
         .ambient {
             position: absolute;
             width: 100%;
@@ -33,7 +32,6 @@
             z-index: -1;
         }
 
-        /* The Envelope Container */
         .envelope-wrapper {
             position: relative;
             width: 320px;
@@ -42,21 +40,21 @@
             transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Envelope Body */
+        /* 1. Envelope Body (Highest Z-index to hide letter initially) */
         .envelope {
             position: relative;
             width: 100%;
             height: 100%;
             background-color: var(--env-color);
             box-shadow: 0 15px 35px rgba(0,0,0,0.7);
-            z-index: 2;
+            z-index: 4; /* Keeps letter hidden behind this */
         }
 
         /* Side Folds */
         .envelope::before {
             content: "";
             position: absolute;
-            z-index: 4;
+            z-index: 5;
             border-top: 110px solid transparent;
             border-right: 160px solid var(--env-color);
             border-bottom: 110px solid var(--env-color);
@@ -75,10 +73,75 @@
             border-top: 115px solid var(--env-dark);
             transform-origin: top;
             transition: transform 0.5s ease, z-index 0.3s;
-            z-index: 5;
+            z-index: 6; /* On top of everything */
         }
 
-        /* The Heart Seal */
+        /* 2. THE LETTER (Lower Z-index initially) */
+        .letter {
+            position: absolute;
+            bottom: 0; /* Tucked inside */
+            left: 10px;
+            width: 300px;
+            height: 190px;
+            background-color: #fdf5e6;
+            background-image: url('old-letter-1.png'); /* Updated Filename */
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            padding: 30px;
+            box-sizing: border-box;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            z-index: 2; /* Behind the envelope body */
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .letter-content {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.2rem;
+            line-height: 1.5;
+            color: #3d2b1f;
+            overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.5s;
+            padding-right: 10px;
+        }
+
+        /* STEP 1: OPEN FLAP */
+        .open .flap {
+            transform: rotateX(180deg);
+            z-index: 1; /* Move flap behind letter when open */
+        }
+        
+        /* Slide letter up slightly so it peeks out */
+        .open .letter {
+            bottom: 100px;
+            z-index: 3; /* Still behind front folds but above back */
+        }
+
+        .open .heart {
+            transform: rotate(45deg) translateY(-20px) scale(0);
+            opacity: 0;
+        }
+
+        /* STEP 2: EXPAND TO FULL SCREEN */
+        .expanded .letter {
+            width: 90vw;
+            max-width: 600px;
+            height: 85vh;
+            bottom: 50%;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            z-index: 10; /* Above everything */
+            padding: 50px;
+            box-shadow: 0 0 100px rgba(0,0,0,0.8);
+            background-size: cover;
+        }
+        
+        .expanded .letter-content {
+            opacity: 1;
+        }
+
         .heart {
             position: absolute;
             top: 95px;
@@ -86,7 +149,7 @@
             width: 30px;
             height: 30px;
             background: #a82a2a;
-            z-index: 6;
+            z-index: 7;
             transform: rotate(45deg);
             transition: transform 0.5s, opacity 0.4s;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
@@ -102,68 +165,6 @@
         .heart::before { left: -15px; }
         .heart::after { top: -15px; }
 
-        /* THE LETTER (Hidden inside) */
-        .letter {
-            position: absolute;
-            bottom: 5px;
-            left: 10px;
-            width: 300px;
-            height: 190px;
-            background-color: #fdf5e6;
-            background-image: url('old-letter.PNG'); /* <--- YOUR IMAGE */
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
-            padding: 30px;
-            box-sizing: border-box;
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-            z-index: 3;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .letter-content {
-            font-family: 'Dancing Script', cursive;
-            font-size: 1.2rem;
-            line-height: 1.5;
-            color: #3d2b1f;
-            overflow-y: auto; /* Allows long text to scroll */
-            opacity: 0;
-            transition: opacity 0.5s;
-            padding-right: 10px;
-        }
-
-        /* States: Open Envelope */
-        .open .flap {
-            transform: rotateX(180deg);
-            z-index: 1;
-        }
-        .open .heart {
-            transform: rotate(45deg) translateY(-20px) scale(0);
-            opacity: 0;
-        }
-
-        /* States: Pull Letter Out & Expand */
-        .expanded .letter {
-            width: 90vw;
-            max-width: 600px;
-            height: 85vh;
-            bottom: 50%;
-            left: 50%;
-            transform: translate(-50%, 50%);
-            z-index: 10;
-            padding: 50px;
-            box-shadow: 0 0 100px rgba(0,0,0,0.8);
-            background-size: cover; /* Better for large view */
-        }
-        
-        .expanded .letter-content {
-            opacity: 1;
-        }
-
-        /* Hide the instruction when expanded */
-        .expanded ~ .instruction { opacity: 0; }
-
         .instruction {
             position: absolute;
             bottom: 15%;
@@ -172,12 +173,11 @@
             letter-spacing: 1px;
             text-transform: uppercase;
             transition: opacity 0.3s;
+            pointer-events: none;
         }
 
-        /* Scrollbar Styling */
         .letter-content::-webkit-scrollbar { width: 6px; }
         .letter-content::-webkit-scrollbar-thumb { background: #d2b48c; border-radius: 10px; }
-
     </style>
 </head>
 <body>
@@ -189,15 +189,13 @@
         <div class="heart"></div>
         <div class="letter" id="letter">
             <div class="letter-content">
-                <p>My Dearest,</p>
+                <p>My Dearest Jai,</p>
                 <p>I wanted to write this to tell you how much you truly mean to me. Sometimes it’s hard to find the right words in the moment, so I thought I’d put them here, where they can stay forever.</p>
                 
                 <p>Ever since you came into my life, everything has felt a little brighter. I love the way we talk for hours, the way you laugh, and even the quiet moments we share. You are my best friend and my greatest adventure.</p>
                 
                 <p>No matter where life takes us, I want you to know that I am always in your corner. Thank you for being exactly who you are. You are loved more than words on a page could ever express.</p>
                 
-                <p>This message is long because my appreciation for you is endless. I look forward to every second, every minute, and every year we have ahead of us.</p>
-
                 <p>With all my love,</p>
                 <p style="font-size: 1.8rem;">[Your Name]</p>
             </div>
@@ -211,17 +209,15 @@
         const wrapper = document.getElementById('env-wrapper');
         const instruction = document.querySelector('.instruction');
         
-        wrapper.addEventListener('click', () => {
+        wrapper.addEventListener('click', (e) => {
+            e.stopPropagation();
             if (!wrapper.classList.contains('open')) {
-                // Step 1: Open Flap
                 wrapper.classList.add('open');
-                instruction.innerText = "Click again to read";
+                instruction.innerText = "Click the letter to read";
             } else if (!wrapper.classList.contains('expanded')) {
-                // Step 2: Pull out and Expand Letter
                 wrapper.classList.add('expanded');
                 instruction.style.opacity = "0";
             } else {
-                // Optional Step 3: Close it back up
                 wrapper.classList.remove('expanded');
                 wrapper.classList.remove('open');
                 instruction.innerText = "Click to Open Heart";
