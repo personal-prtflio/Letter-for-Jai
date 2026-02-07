@@ -47,8 +47,9 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             border: 2px solid var(--gold-ink);
             opacity: 0.6;
-            transition: opacity 0.3s;
+            transition: all 0.3s ease;
         }
+        .music-toggle:hover { opacity: 1; transform: scale(1.1); }
         .music-toggle svg { fill: var(--ink-color); width: 22px; }
 
         /* --- ENVELOPE --- */
@@ -59,6 +60,12 @@
             aspect-ratio: 35 / 25;
             cursor: pointer;
             z-index: 5;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* HOVER EFFECT: Lift envelope */
+        .envelope-wrapper:hover {
+            transform: translateY(-10px);
         }
 
         .envelope {
@@ -72,14 +79,13 @@
             border-radius: 4px;
         }
 
-        /* "To: Jai" moved lower and centered behind the heart seal */
         .envelope::after {
             content: "To: Jai";
             position: absolute;
-            top: 75%; /* Moved lower */
+            top: 75%; 
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 5; /* Behind the heart (z-index 10) */
+            z-index: 5;
             font-family: 'Dancing Script', cursive;
             font-size: clamp(1.8rem, 7vw, 2.5rem);
             color: rgba(26, 26, 26, 0.7);
@@ -101,15 +107,19 @@
         /* --- HEART SEAL (heart.png) --- */
         .heart-seal {
             position: absolute;
-            top: 55%; /* Adjusted to align with the flap point */
+            top: 55%; 
             left: 50%;
-            width: 80px; /* Adjust size to fit your heart.png */
+            width: 80px; 
             height: auto;
-            transform: translate(-50%, -50%);
-            transform: rotate(20deg);
+            transform: translate(-50%, -50%) rotate(10deg);
             z-index: 10;
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
-            transition: opacity 0.4s;
+            transition: opacity 0.4s, transform 0.3s ease;
+        }
+
+        /* HOVER EFFECT: Pulse the heart */
+        .envelope-wrapper:hover .heart-seal {
+            transform: translate(-50%, -50%) scale(1.15);
         }
 
         .open .heart-seal { opacity: 0; pointer-events: none; }
@@ -161,8 +171,10 @@
             z-index: 12;
         }
 
+        /* OPEN/EXPAND STATES */
         .open .flap { transform: rotateX(180deg); z-index: 1; }
         .open .letter { bottom: 65%; z-index: 3; }
+        .open.envelope-wrapper:hover { transform: none; } /* Stop floating after open */
 
         .expanded .letter {
             width: 95vw;
@@ -189,8 +201,10 @@
             text-transform: uppercase;
             font-weight: bold;
             opacity: 0.7;
+            transition: opacity 0.3s;
         }
 
+        /* Petals */
         .petal {
             position: absolute;
             background-color: #ffdae0;
@@ -219,7 +233,6 @@
 
     <div class="envelope-wrapper" id="env-wrapper">
         <div class="flap"></div>
-        
         <img src="heart.png" class="heart-seal" id="heart-seal" alt="Seal">
 
         <div class="letter" id="letter">
