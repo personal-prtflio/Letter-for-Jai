@@ -13,7 +13,7 @@
             --env-flap: #b89a7d;
             --ink-color: #1a1a1a; 
             --gold-ink: #9d7c39;
-            --heart-red: #a82a2a;
+            --wax-red: #a31a1a;
             --parchment-base: #f7f0e3;
             --parchment-edge: #e6dcc8;
         }
@@ -48,7 +48,6 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             border: 2px solid var(--gold-ink);
             opacity: 0.6;
-            transition: opacity 0.3s;
         }
         .music-toggle svg { fill: var(--ink-color); width: 22px; }
 
@@ -98,38 +97,69 @@
             z-index: 6;
         }
 
-        /* --- HEART SEAL --- */
-        .heart-container {
+        /* --- THE WAX BROKEN HEART --- */
+        .wax-seal {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 50px;
-            height: 50px;
+            width: 70px;
+            height: 70px;
+            background: var(--wax-red);
             transform: translate(-50%, -50%);
-            z-index: 7;
+            z-index: 10;
+            border-radius: 50%;
+            /* The organic wax "pool" shape */
+            box-shadow: 
+                inset 0 0 10px rgba(0,0,0,0.5),
+                0 4px 8px rgba(0,0,0,0.3);
             display: flex;
-            transition: opacity 0.4s ease;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.4s;
         }
 
-        .heart-half {
-            width: 30px;
-            height: 45px;
-            background: var(--heart-red);
-            border-radius: 30px 30px 0 0;
-            transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* Jagged Crack across the wax */
+        .wax-seal::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--wax-red);
+            border-radius: 50%;
+            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.2);
+            clip-path: polygon(
+                48% 0%, 52% 0%, 
+                45% 20%, 55% 40%, 
+                42% 60%, 58% 80%, 
+                50% 100%, 45% 100%
+            );
+            background: rgba(0,0,0,0.4);
+            z-index: 12;
         }
 
-        .left-half { transform: rotate(-45deg) translateX(10px); transform-origin: 100% 100%; }
-        .right-half { transform: rotate(45deg) translateX(-10px); transform-origin: 0% 100%; }
-
-        .heart-container.pulse { animation: heartPulse 2s infinite; }
-        @keyframes heartPulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.1); }
+        .heart-shape {
+            width: 40px;
+            height: 40px;
+            background: var(--wax-red);
+            position: relative;
+            transform: rotate(-45deg);
+            box-shadow: inset -3px 3px 6px rgba(0,0,0,0.3);
         }
 
-        .open .left-half { transform: rotate(-70deg) translateX(-50px) translateY(-20px); opacity: 0; }
-        .open .right-half { transform: rotate(70deg) translateX(50px) translateY(-20px); opacity: 0; }
+        .heart-shape::before, .heart-shape::after {
+            content: "";
+            width: 40px;
+            height: 40px;
+            background: var(--wax-red);
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1);
+        }
+
+        .heart-shape::before { top: -20px; left: 0; }
+        .heart-shape::after { left: 20px; top: 0; }
+
+        .open .wax-seal { opacity: 0; pointer-events: none; transition: 0.3s; }
 
         /* --- LETTER --- */
         .letter {
@@ -150,7 +180,6 @@
 
         .letter-content {
             font-family: 'Dancing Script', cursive;
-            font-weight: 500;
             color: var(--ink-color);
             opacity: 0;
             transition: opacity 0.5s;
@@ -237,9 +266,9 @@
 
     <div class="envelope-wrapper" id="env-wrapper">
         <div class="flap"></div>
-        <div class="heart-container pulse" id="heart-seal">
-            <div class="heart-half left-half"></div>
-            <div class="heart-half right-half"></div>
+        
+        <div class="wax-seal" id="heart-seal">
+            <div class="heart-shape"></div>
         </div>
 
         <div class="letter" id="letter">
@@ -248,7 +277,7 @@
                 <p style="font-size: 1.2em; font-weight: 700;">My Dearest Jai,</p>
                 <p>I wanted to write this to tell you how much you truly mean to me. Sometimes it’s hard to find the right words in the moment, so I thought I’d put them here, where they can stay forever.</p>
                 <p>Ever since you came into my life, everything has felt a little brighter. I love the way we talk for hours, the way you laugh, and even the quiet moments we share. You are my best friend and my greatest adventure.</p>
-                <p>No matter where life takes us, I want you to know that I am always in your corner. Thank you for being exactly who you are.</p>
+                <p>Thank you for being exactly who you are.</p>
                 <p>With all my love,</p>
                 <p style="font-size: 1.6em; margin-top: 30px; font-weight: 700;">[Your Name]</p>
             </div>
@@ -256,12 +285,11 @@
         <div class="envelope"></div>
     </div>
 
-    <div class="instruction">Tap the heart to open</div>
+    <div class="instruction">Tap the seal to open</div>
 
     <script>
         const wrapper = document.getElementById('env-wrapper');
         const closeBtn = document.getElementById('close-btn');
-        const heartSeal = document.getElementById('heart-seal');
         const musicToggle = document.getElementById('music-toggle');
         const bgMusic = document.getElementById('bg-music');
         
@@ -289,7 +317,6 @@
             if (wrapper.classList.contains('expanded')) return;
             if (!wrapper.classList.contains('open')) {
                 wrapper.classList.add('open');
-                heartSeal.classList.remove('pulse');
                 document.querySelector('.instruction').innerText = "Tap letter to read";
             } else {
                 wrapper.classList.add('expanded');
@@ -300,8 +327,7 @@
         closeBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             wrapper.classList.remove('expanded', 'open');
-            heartSeal.classList.add('pulse');
-            document.querySelector('.instruction').innerText = "Tap the heart to open";
+            document.querySelector('.instruction').innerText = "Tap the seal to open";
             document.querySelector('.instruction').style.opacity = "0.7";
         });
     </script>
