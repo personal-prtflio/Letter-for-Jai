@@ -8,10 +8,11 @@
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&display=swap');
 
         :root {
-            --bg-color: #121212;
-            --env-color: #c4a484;
-            --env-dark: #a68a6d;
-            /* Match this to the white in your PNG to hide borders */
+            /* Changed to white to match your PNG edges */
+            --bg-color: #ffffff; 
+            /* Darkened envelope colors to make it pop against the white bg */
+            --env-color: #b38b6d;
+            --env-dark: #8c6a50;
             --paper-white: #ffffff; 
         }
 
@@ -26,11 +27,12 @@
             perspective: 1000px;
         }
 
+        /* Ambient glow removed or kept very subtle for white theme */
         .ambient {
             position: absolute;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, #2c1e1e 0%, #121212 100%);
+            background: radial-gradient(circle at center, #ffffff 0%, #f0f0f0 100%);
             z-index: -1;
         }
 
@@ -47,7 +49,8 @@
             width: 100%;
             height: 100%;
             background-color: var(--env-color);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            /* Softened shadow for white background */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             z-index: 4;
         }
 
@@ -82,10 +85,8 @@
             left: 10px;
             width: 300px;
             height: 190px;
-            /* Set background to pure white to match your PNG's edges */
             background-color: var(--paper-white); 
             background-image: url('old-letter-1.png');
-            /* 'contain' ensures the whole design is visible without cutting off */
             background-size: contain; 
             background-repeat: no-repeat;
             background-position: center;
@@ -100,13 +101,13 @@
 
         .letter-content {
             font-family: 'Dancing Script', cursive;
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             line-height: 1.6;
             color: #3d2b1f;
             overflow-y: auto;
             opacity: 0;
             transition: opacity 0.5s;
-            padding: 10px;
+            padding: 20px;
             z-index: 11;
         }
 
@@ -117,7 +118,7 @@
         }
         
         .open .letter {
-            bottom: 100px;
+            bottom: 120px;
             z-index: 3;
         }
 
@@ -128,15 +129,16 @@
 
         /* EXPANDED STATE */
         .expanded .letter {
-            width: 90vw;
-            max-width: 600px;
-            height: 85vh;
+            width: 95vw;
+            max-width: 700px;
+            height: 90vh;
             bottom: 50%;
             left: 50%;
             transform: translate(-50%, 50%);
             z-index: 10;
             padding: 40px;
-            box-shadow: 0 0 100px rgba(0,0,0,0.8);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            border: 1px solid #eee; /* Subtle border for the white paper on white bg */
         }
         
         .expanded .letter-content {
@@ -153,7 +155,7 @@
             z-index: 7;
             transform: rotate(45deg);
             transition: transform 0.5s, opacity 0.4s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         .heart::before, .heart::after {
             content: "";
@@ -168,17 +170,17 @@
 
         .instruction {
             position: absolute;
-            bottom: 10%;
-            color: #888;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
+            bottom: 8%;
+            color: #aaa;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
             text-transform: uppercase;
             transition: opacity 0.3s;
             pointer-events: none;
         }
 
-        .letter-content::-webkit-scrollbar { width: 6px; }
-        .letter-content::-webkit-scrollbar-thumb { background: #d2b48c; border-radius: 10px; }
+        .letter-content::-webkit-scrollbar { width: 4px; }
+        .letter-content::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -204,23 +206,23 @@
         <div class="envelope"></div>
     </div>
 
-    <div class="instruction">Click to Open Heart</div>
+    <div class="instruction">Click to Open</div>
 
     <script>
         const wrapper = document.getElementById('env-wrapper');
         const instruction = document.querySelector('.instruction');
         
-        wrapper.addEventListener('click', (e) => {
+        wrapper.addEventListener('click', () => {
             if (!wrapper.classList.contains('open')) {
                 wrapper.classList.add('open');
-                instruction.innerText = "Click the letter to read";
+                instruction.innerText = "Click letter to read";
             } else if (!wrapper.classList.contains('expanded')) {
                 wrapper.classList.add('expanded');
                 instruction.style.opacity = "0";
             } else {
                 wrapper.classList.remove('expanded');
                 wrapper.classList.remove('open');
-                instruction.innerText = "Click to Open Heart";
+                instruction.innerText = "Click to Open";
                 instruction.style.opacity = "1";
             }
         });
