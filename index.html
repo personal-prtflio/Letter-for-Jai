@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Letter For You</title>
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --env-color: #c4a484;
+            --env-dark: #a68a6d;
+            --paper-color: #fdf5e6;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: var(--bg-color);
+            font-family: 'Georgia', serif;
+            overflow: hidden;
+        }
+
+        /* Ambient Background */
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #2c1e1e 0%, #1a1a1a 100%);
+            z-index: -1;
+        }
+
+        .instruction {
+            position: absolute;
+            top: 10%;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        /* The Envelope Container */
+        .envelope-wrapper {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .envelope-wrapper:hover {
+            transform: translateY(-10px);
+        }
+
+        .envelope {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background-color: var(--env-dark);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Front folds of envelope */
+        .envelope::before {
+            content: "";
+            position: absolute;
+            z-index: 2;
+            border-top: 100px solid transparent;
+            border-right: 150px solid var(--env-color);
+            border-bottom: 100px solid var(--env-color);
+            border-left: 150px solid var(--env-color);
+        }
+
+        /* The Flap */
+        .flap {
+            position: absolute;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 100px solid var(--env-dark);
+            transform-origin: top;
+            transition: transform 0.4s 0.2s, z-index 0.4s;
+            z-index: 3;
+        }
+
+        /* The Letter Paper */
+        .letter {
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            width: 280px;
+            height: 180px;
+            background: var(--paper-color);
+            background-image: url('old-letter.png'); /* Your PNG */
+            background-size: cover;
+            background-position: center;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: all 0.6s ease-in-out;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .text-content {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #3d2b1f;
+            opacity: 0;
+            transition: opacity 0.3s;
+            max-height: 100%;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        /* Interaction States */
+        .envelope-wrapper.open .flap {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        .envelope-wrapper.open .letter {
+            bottom: 100px;
+            height: 450px;
+            width: 350px;
+            left: -25px;
+            z-index: 5;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        }
+
+        /* Full expansion when focused */
+        .envelope-wrapper.expanded .letter {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 600px;
+            height: 80vh;
+            z-index: 100;
+        }
+
+        .envelope-wrapper.open .text-content {
+            opacity: 1;
+            transition-delay: 0.6s;
+        }
+
+        /* Heart Seal */
+        .heart {
+            position: absolute;
+            top: 85px;
+            left: 135px;
+            width: 30px;
+            height: 30px;
+            background: #be1e2d;
+            z-index: 4;
+            transform: rotate(45deg);
+            transition: opacity 0.3s;
+        }
+        .heart::before, .heart::after {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #be1e2d;
+            border-radius: 50%;
+        }
+        .heart::before { left: -15px; }
+        .heart::after { top: -15px; }
+
+        .open .heart {
+            opacity: 0;
+        }
+
+        /* Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap');
+
+        /* Scrollbar Styling for long letters */
+        .text-content::-webkit-scrollbar { width: 5px; }
+        .text-content::-webkit-scrollbar-track { background: transparent; }
+        .text-content::-webkit-scrollbar-thumb { background: #d2b48c; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="stars"></div>
+    <div class="instruction">Click to open your heart</div>
+
+    <div class="envelope-wrapper" id="env">
+        <div class="flap"></div>
+        <div class="heart"></div>
+        <div class="envelope"></div>
+        <div class="letter">
+            <div class="text-content">
+                <p>Dearest [Name],</p>
+                
+                <p>I wanted to find a way to tell you everything that's been on my mind, but words often feel too small for how I feel. From the moment we met, you've changed the color of my world.</p>
+
+                <p>There are so many things I love about you. I love the way you laugh, the way you look when you're focused, and the way you make even the most ordinary days feel like an adventure. Being with you is like coming home.</p>
+
+                <p>This is a long message because there is so much to say. I want to be there for your triumphs and hold your hand through the quiet moments. You are my best friend, my greatest comfort, and my deepest love.</p>
+
+                <p>Every day I spend with you is a gift, and I promise to never take it for granted. I look forward to every tomorrow we share together.</p>
+
+                <p>Forever and always yours,</p>
+                <p style="font-size: 1.5rem; margin-top: 20px;">[Your Name]</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const envelope = document.getElementById('env');
+        
+        envelope.addEventListener('click', () => {
+            if (!envelope.classList.contains('open')) {
+                // First click: Open envelope and slide letter out
+                envelope.classList.add('open');
+            } else {
+                // Second click: Expand to full screen for reading
+                envelope.classList.toggle('expanded');
+            }
+        });
+    </script>
+</body>
+</html>
