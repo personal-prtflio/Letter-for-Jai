@@ -5,14 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Letter For Jai</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&display=swap');
+        /* Switched to 'Homemade Apple' for a clearer, more distinct handwriting style */
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Homemade+Apple&display=swap');
 
         :root {
             --bg-color: #f0ebe3; 
             --env-color: #d1b399;
             --env-dark: #b8977d;
             --env-flap: #c2a38a;
-            --ink-color: #4a3728;
+            /* Blackened ink for better clarity */
+            --ink-color: #1a1a1a; 
             --gold-ink: #9d7c39;
         }
 
@@ -63,18 +65,15 @@
             transition: transform 0.3s;
             border: 2px solid var(--gold-ink);
         }
-
-        .music-toggle:hover { transform: scale(1.1); }
         .music-toggle svg { fill: var(--ink-color); width: 20px; }
 
-        /* --- ENVELOPE WRAPPER --- */
+        /* --- ENVELOPE --- */
         .envelope-wrapper {
             position: relative;
             width: 90vw;
             max-width: 350px;
             aspect-ratio: 35 / 23;
             cursor: pointer;
-            transition: transform 0.6s ease;
             z-index: 5;
         }
 
@@ -101,19 +100,7 @@
             background: linear-gradient(45deg, #9d7c39 30%, #e2c07d 50%, #9d7c39 70%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.1));
             transform: translateY(20px);
-        }
-
-        .envelope::before {
-            content: "";
-            position: absolute;
-            z-index: 5;
-            width: 100%; height: 100%;
-            background: 
-                linear-gradient(to top right, var(--env-color) 48%, transparent 50%),
-                linear-gradient(to top left, var(--env-color) 48%, transparent 50%),
-                linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.05) 100%);
         }
 
         .flap {
@@ -124,9 +111,8 @@
             background-color: var(--env-flap);
             clip-path: polygon(0 0, 100% 0, 50% 100%);
             transform-origin: top;
-            transition: transform 0.6s ease-in-out, z-index 0.3s;
+            transition: transform 0.6s ease-in-out;
             z-index: 6;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
         }
 
         /* --- THE LETTER --- */
@@ -145,11 +131,11 @@
             mask-image: url('old-letter-1.png');
             -webkit-mask-size: cover;
             mask-size: cover;
-            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1));
         }
 
         .letter-content {
-            font-family: 'Dancing Script', cursive;
+            /* Changed to Homemade Apple for better clarity */
+            font-family: 'Homemade Apple', cursive;
             color: var(--ink-color);
             opacity: 0;
             transition: opacity 0.5s;
@@ -158,6 +144,9 @@
             box-sizing: border-box;
             padding: 10%;
             overflow-y: auto;
+            /* Slight letter spacing and font smoothing for clarity */
+            letter-spacing: 0.5px;
+            -webkit-font-smoothing: antialiased;
         }
 
         .close-btn {
@@ -166,17 +155,16 @@
             right: 15px;
             width: 30px;
             height: 30px;
-            background: rgba(0,0,0,0.05);
+            background: rgba(0,0,0,0.1);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 20px;
-            color: var(--ink-color);
+            color: #000;
             cursor: pointer;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s;
             z-index: 12;
         }
 
@@ -193,13 +181,13 @@
             z-index: 10;
             -webkit-mask-size: 100% 100%;
             mask-size: 100% 100%;
-            background-size: 100% 100%;
         }
         
         .expanded .letter-content {
             opacity: 1;
             padding: clamp(40px, 12%, 100px);
-            font-size: clamp(1.1rem, 4.5vw, 1.8rem);
+            /* Slightly smaller clamp range for clarity */
+            font-size: clamp(0.9rem, 4vw, 1.4rem);
         }
 
         .expanded .close-btn { opacity: 1; pointer-events: auto; }
@@ -241,8 +229,9 @@
             opacity: 0.6;
         }
 
+        /* Scrollbar styling */
         .letter-content::-webkit-scrollbar { width: 4px; }
-        .letter-content::-webkit-scrollbar-thumb { background: #d2b48c; border-radius: 10px; }
+        .letter-content::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -252,7 +241,7 @@
     </audio>
 
     <div class="music-toggle" id="music-toggle">
-        <svg id="music-icon" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
     </div>
 
     <div id="petal-container"></div>
@@ -263,19 +252,12 @@
         <div class="letter" id="letter">
             <div class="close-btn" id="close-btn">&times;</div>
             <div class="letter-content">
-                <p>Dear Jai,</p>
-                <p>I’ve been thinking about this for a long time, and this is really hard for me to say, not because I don’t care, but because I do.</p>
-                <p>I need to be honest with you. I’ve really tried to make this work. I tried to show up, to adjust, to push myself to be better. But even after all that, I still can’t see or visualize a future where I can fully be what you need and deserve. And that truth scares me, because I know how deeply you feel.</p>
-                <p>Please understand this — this isn’t about you lacking anything. You didn’t fail me. You didn’t love me wrong. I love you, and that’s real. But love alone isn’t enough if I can’t bring myself up to the level of certainty, consistency, and emotional capacity that this relationship requires.</p>
-                <p>It feels like I was caught up in the situation — in the emotions, in wanting to be there, in not wanting to hurt you — and I mistook that for readiness. I wanted so badly to be sure, but the more I tried, the clearer it became that I’m not able to fully give myself the way a partner should.</p>
-                <p>Maybe we’re not really compatible in the ways that matter long-term. And as painful as that is to admit, it would be more unfair to keep holding on when I already know I can’t step into this future with confidence.</p>
-                <p>I don’t want to keep you in a place of uncertainty. You deserve someone who is sure — someone who doesn’t have to convince themselves to stay, someone who can see you in their future without doubt.</p>
-                <p>This decision hurts me too. Letting go doesn’t mean I never cared — it means I care enough to stop pretending I can be something I’m not ready to be.</p>
-                <p>So with honesty, and with love, I need to ask:</p>
-                <p>Will you not be my girlfriend?</p>
-                <p>I’m sorry for the pain this causes. I truly am.</p>
-                <p></p>
-                <p style="font-size: 1.5em; margin-top: 20px;">Mic</p>
+                <p>My Dearest Jai,</p>
+                <p>I wanted to write this to tell you how much you truly mean to me. Sometimes it’s hard to find the right words in the moment, so I thought I’d put them here, where they can stay forever.</p>
+                <p>Ever since you came into my life, everything has felt a little brighter. I love the way we talk for hours, the way you laugh, and even the quiet moments we share. You are my best friend and my greatest adventure.</p>
+                <p>No matter where life takes us, I want you to know that I am always in your corner. Thank you for being exactly who you are. You are loved more than words on a page could ever express.</p>
+                <p>With all my love,</p>
+                <p style="font-size: 1.4em; margin-top: 20px;">[Your Name]</p>
             </div>
         </div>
         <div class="envelope"></div>
@@ -288,9 +270,7 @@
         const closeBtn = document.getElementById('close-btn');
         const musicToggle = document.getElementById('music-toggle');
         const bgMusic = document.getElementById('bg-music');
-        const instruction = document.querySelector('.instruction');
         
-        // Petal Generation
         function createPetals() {
             const container = document.getElementById('petal-container');
             for (let i = 0; i < 15; i++) {
@@ -305,34 +285,27 @@
         }
         createPetals();
 
-        // Music Logic
         musicToggle.addEventListener('click', () => {
-            if (bgMusic.paused) {
-                bgMusic.play();
-                musicToggle.style.opacity = "1";
-            } else {
-                bgMusic.pause();
-                musicToggle.style.opacity = "0.5";
-            }
+            if (bgMusic.paused) { bgMusic.play(); musicToggle.style.opacity = "1"; }
+            else { bgMusic.pause(); musicToggle.style.opacity = "0.5"; }
         });
 
-        // Envelope Logic
         wrapper.addEventListener('click', () => {
             if (wrapper.classList.contains('expanded')) return;
             if (!wrapper.classList.contains('open')) {
                 wrapper.classList.add('open');
-                instruction.innerText = "Tap letter to read";
+                document.querySelector('.instruction').innerText = "Tap letter to read";
             } else {
                 wrapper.classList.add('expanded');
-                instruction.style.opacity = "0";
+                document.querySelector('.instruction').style.opacity = "0";
             }
         });
 
         closeBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             wrapper.classList.remove('expanded', 'open');
-            instruction.innerText = "Tap to Open";
-            instruction.style.opacity = "0.6";
+            document.querySelector('.instruction').innerText = "Tap to Open";
+            document.querySelector('.instruction').style.opacity = "0.6";
         });
     </script>
 </body>
