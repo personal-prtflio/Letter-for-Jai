@@ -13,7 +13,7 @@
             --env-flap: #b89a7d;
             --ink-color: #1a1a1a; 
             --gold-ink: #9d7c39;
-            --wax-red: #a31a1a;
+            --heart-red: #a31a1a; /* Deep wax red */
             --parchment-base: #f7f0e3;
             --parchment-edge: #e6dcc8;
         }
@@ -48,6 +48,7 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             border: 2px solid var(--gold-ink);
             opacity: 0.6;
+            transition: opacity 0.3s;
         }
         .music-toggle svg { fill: var(--ink-color); width: 22px; }
 
@@ -97,69 +98,51 @@
             z-index: 6;
         }
 
-        /* --- THE WAX BROKEN HEART --- */
-        .wax-seal {
+        /* --- THE CLEAN BROKEN HEART --- */
+        .heart-seal {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 70px;
-            height: 70px;
-            background: var(--wax-red);
-            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: var(--heart-red);
+            transform: translate(-50%, -50%) rotate(-45deg);
             z-index: 10;
-            border-radius: 50%;
-            /* The organic wax "pool" shape */
-            box-shadow: 
-                inset 0 0 10px rgba(0,0,0,0.5),
-                0 4px 8px rgba(0,0,0,0.3);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            box-shadow: -5px 5px 15px rgba(0,0,0,0.3);
             transition: opacity 0.4s;
         }
 
-        /* Jagged Crack across the wax */
-        .wax-seal::before {
+        .heart-seal::before, .heart-seal::after {
             content: "";
             position: absolute;
+            width: 50px;
+            height: 50px;
+            background: var(--heart-red);
+            border-radius: 50%;
+        }
+
+        .heart-seal::before { top: -25px; left: 0; }
+        .heart-seal::after { left: 25px; top: 0; }
+
+        /* The Jagged Crack */
+        .crack {
+            position: absolute;
+            top: -25px;
+            left: 0;
             width: 100%;
-            height: 100%;
-            background: var(--wax-red);
-            border-radius: 50%;
-            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.2);
+            height: 150%;
+            background: #f4f1ea; /* Matches background/env to look like a gap */
+            z-index: 11;
+            transform: rotate(45deg); /* Straightens the crack relative to screen */
             clip-path: polygon(
-                48% 0%, 52% 0%, 
-                45% 20%, 55% 40%, 
-                42% 60%, 58% 80%, 
-                50% 100%, 45% 100%
+                49% 0%, 51% 0%, 
+                46% 20%, 54% 40%, 
+                44% 60%, 56% 80%, 
+                50% 100%, 48% 100%
             );
-            background: rgba(0,0,0,0.4);
-            z-index: 12;
         }
 
-        .heart-shape {
-            width: 40px;
-            height: 40px;
-            background: var(--wax-red);
-            position: relative;
-            transform: rotate(-45deg);
-            box-shadow: inset -3px 3px 6px rgba(0,0,0,0.3);
-        }
-
-        .heart-shape::before, .heart-shape::after {
-            content: "";
-            width: 40px;
-            height: 40px;
-            background: var(--wax-red);
-            border-radius: 50%;
-            position: absolute;
-            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1);
-        }
-
-        .heart-shape::before { top: -20px; left: 0; }
-        .heart-shape::after { left: 20px; top: 0; }
-
-        .open .wax-seal { opacity: 0; pointer-events: none; transition: 0.3s; }
+        .open .heart-seal { opacity: 0; pointer-events: none; }
 
         /* --- LETTER --- */
         .letter {
@@ -267,31 +250,27 @@
     <div class="envelope-wrapper" id="env-wrapper">
         <div class="flap"></div>
         
-        <div class="wax-seal" id="heart-seal">
-            <div class="heart-shape"></div>
+        <div class="heart-seal" id="heart-seal">
+            <div class="crack"></div>
         </div>
 
         <div class="letter" id="letter">
             <div class="close-btn" id="close-btn">&times;</div>
             <div class="letter-content">
-                <p style="font-size: 1.2em; font-weight: 700;">My Dearest Jai,</p>
+                <p style="font-size: 1.2em; font-weight: 700;">Dear Jai,</p>
                 <p>I wanted to write this to tell you how much you truly mean to me. Sometimes it’s hard to find the right words in the moment, so I thought I’d put them here, where they can stay forever.</p>
                 <p>Ever since you came into my life, everything has felt a little brighter. I love the way we talk for hours, the way you laugh, and even the quiet moments we share. You are my best friend and my greatest adventure.</p>
                 <p>Thank you for being exactly who you are.</p>
-
                 <p>This is really hard for me to say, and I’ve been sitting with this for a while now because I didn’t want to hurt you or make you feel like everything we had meant nothing. It did. You did.</p>
-
-                <p>I need to be honest with you — as much as I’ve tried to make this work, I can’t see my future with you. I’ve tried to imagine it, to visualize us moving forward, but I keep coming up empty. And that hurts me too, because I know how much you’ve invested emotionally.
-</p>
-<p>Please know this: this is not because you weren’t enough. You didn’t fail me. You didn’t lack effort, love, or care. This is about me. I’m still trying to understand myself, my limits, and what I can truly give. Somewhere along the way, I realized I was caught up in the situation — in the emotions, the intensity, the care — but not fully grounded in who I am and what I can commit to long-term.</p>
-<p>I do love you. That part is real. But love alone isn’t enough if I can’t show up the way you deserve or see myself growing into the future you’re hoping for. And it wouldn’t be fair to keep holding on when deep down, I know I can’t fully step into that role.</p>
-<p>Maybe the truth is, we’re just not compatible in the ways that matter most — not because either of us is wrong, but because we need different things, at different capacities, at this point in our lives.</p>
-<p>So with honesty and respect, I need to ask: will you not be my girlfriend?</p>
-<p>Not because you aren’t worthy — but because I don’t want to keep you in something where I’m unsure, and you deserve certainty.</p>
-<p>I also want you to know that ending this doesn’t mean erasing you from my life. I don’t want to get rid of the memories we had — they were real, meaningful, and they mattered to me. And if you’re open to it, I still want us to be friends, with healthier boundaries, and mutual respect. I care about you as a person, not just as someone I dated.</p>
-
-<p>This is me being true to myself, even if it’s painful. I hope one day you’ll understand that this decision came from honesty, not from lack of love.</p>
-<p>Thank you for everything you gave, and for the part you played in my life. I will always be grateful for that.</p>
+                <p>I need to be honest with you — as much as I’ve tried to make this work, I can’t see my future with you. I’ve tried to imagine it, to visualize us moving forward, but I keep coming up empty. And that hurts me too, because I know how much you’ve invested emotionally.</p>
+                <p>Please know this: this is not because you weren’t enough. You didn’t fail me. You didn’t lack effort, love, or care. This is about me. I’m still trying to understand myself, my limits, and what I can truly give. Somewhere along the way, I realized I was caught up in the situation — in the emotions, the intensity, the care — but not fully grounded in who I am and what I can commit to long-term.</p>
+                <p>I do love you. That part is real. But love alone isn’t enough if I can’t show up the way you deserve or see myself growing into the future you’re hoping for. And it wouldn’t be fair to keep holding on when deep down, I know I can’t fully step into that role.</p>
+                <p>Maybe the truth is, we’re just not compatible in the ways that matter most — not because either of us is wrong, but because we need different things, at different capacities, at this point in our lives.</p>
+                <p>So with honesty and respect, I need to ask: will you not be my girlfriend?</p>
+                <p>Not because you aren’t worthy — but because I don’t want to keep you in something where I’m unsure, and you deserve certainty.</p>
+                <p>I also want you to know that ending this doesn’t mean erasing you from my life. I don’t want to get rid of the memories we had — they were real, meaningful, and they mattered to me. And if you’re open to it, I still want us to be friends, with healthier boundaries, and mutual respect. I care about you as a person, not just as someone I dated.</p>
+                <p>This is me being true to myself, even if it’s painful. I hope one day you’ll understand that this decision came from honesty, not from lack of love.</p>
+                <p>Thank you for everything you gave, and for the part you played in my life. I will always be grateful for that.</p>
                 <p></p>
                 <p style="font-size: 1.6em; margin-top: 30px; font-weight: 700;">Mic</p>
             </div>
@@ -299,7 +278,7 @@
         <div class="envelope"></div>
     </div>
 
-    <div class="instruction">Tap the seal to open</div>
+    <div class="instruction">Tap the heart to open</div>
 
     <script>
         const wrapper = document.getElementById('env-wrapper');
@@ -341,7 +320,7 @@
         closeBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             wrapper.classList.remove('expanded', 'open');
-            document.querySelector('.instruction').innerText = "Tap the seal to open";
+            document.querySelector('.instruction').innerText = "Tap the heart to open";
             document.querySelector('.instruction').style.opacity = "0.7";
         });
     </script>
