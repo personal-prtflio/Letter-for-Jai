@@ -9,9 +9,7 @@
 
         :root {
             --bg-color: #ffffff; 
-            --env-color: #b38b6d;
-            --env-dark: #8c6a50;
-            --paper-white: #ffffff; 
+            --ink-color: #5a4638; 
         }
 
         body {
@@ -25,34 +23,44 @@
             perspective: 1000px;
         }
 
+        /* --- Floating Petals --- */
+        .petal {
+            position: absolute;
+            background-color: #ffc0cb;
+            border-radius: 150% 0 150% 0;
+            opacity: 0.3;
+            z-index: 0;
+            pointer-events: none;
+            animation: float 10s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+            100% { transform: translateY(110vh) translateX(100px) rotate(360deg); opacity: 0; }
+        }
+
         .envelope-wrapper {
             position: relative;
             width: 320px;
             height: 220px;
             cursor: pointer;
             transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 5;
         }
 
+        /* NEW: Using your PNG as the envelope */
         .envelope {
             position: relative;
             width: 100%;
             height: 100%;
-            background-color: var(--env-color);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            z-index: 4;
+            background-image: url('envelope.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 4; /* Stays in front of the letter initially */
         }
 
-        .envelope::before {
-            content: "";
-            position: absolute;
-            z-index: 5;
-            border-top: 110px solid transparent;
-            border-right: 160px solid var(--env-color);
-            border-bottom: 110px solid var(--env-color);
-            border-left: 160px solid var(--env-color);
-            filter: brightness(0.95);
-        }
-
+        /* The Flap - Still used for the opening animation */
         .flap {
             position: absolute;
             top: 0;
@@ -60,65 +68,49 @@
             height: 0;
             border-left: 160px solid transparent;
             border-right: 160px solid transparent;
-            border-top: 115px solid var(--env-dark);
+            border-top: 110px solid rgba(179, 139, 109, 0.8); /* Semi-transparent till it flips */
             transform-origin: top;
             transition: transform 0.5s ease, z-index 0.3s;
             z-index: 6;
         }
 
-        /* THE LETTER CONTAINER */
+        /* THE LETTER */
         .letter {
             position: absolute;
             bottom: 0;
             left: 10px;
             width: 300px;
             height: 190px;
-            background-color: var(--paper-white); 
+            background-color: #ffffff; 
             background-image: url('old-letter-1.png');
             background-size: cover; 
             background-repeat: no-repeat;
             background-position: center;
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-            z-index: 2;
+            z-index: 2; /* Initially hidden behind envelope.png */
             overflow: hidden;
         }
 
-        /* THE TEXT CONTENT AREA */
         .letter-content {
             font-family: 'Dancing Script', cursive;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             line-height: 1.6;
-            color: #3d2b1f;
+            color: var(--ink-color);
             opacity: 0;
             transition: opacity 0.5s;
-            
-            /* These settings prevent overlapping */
             height: 100%;
             width: 100%;
             box-sizing: border-box;
-            padding: 30px; /* Adjust padding if text hits the paper edges */
+            padding: 30px; 
             overflow-y: auto;
-            position: relative;
-            z-index: 11;
         }
 
         /* OPEN STATE */
-        .open .flap {
-            transform: rotateX(180deg);
-            z-index: 1;
-        }
-        
-        .open .letter {
-            bottom: 120px;
-            z-index: 3;
-        }
+        .open .flap { transform: rotateX(180deg); z-index: 1; }
+        .open .letter { bottom: 120px; z-index: 3; } /* Peeks out but stays behind front of PNG */
+        .open .heart { transform: rotate(45deg) translateY(-20px) scale(0); opacity: 0; }
 
-        .open .heart {
-            transform: rotate(45deg) translateY(-20px) scale(0);
-            opacity: 0;
-        }
-
-        /* EXPANDED STATE (Crucial for overlap fix) */
+        /* EXPANDED STATE */
         .expanded .letter {
             width: 90vw;
             max-width: 650px;
@@ -127,18 +119,19 @@
             left: 50%;
             transform: translate(-50%, 50%);
             z-index: 10;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-            background-size: 100% 100%; /* Stretches paper to match container */
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            background-size: 100% 100%; 
         }
         
         .expanded .letter-content {
             opacity: 1;
-            padding: 60px; /* Gives text more breathing room on large view */
+            padding: 50px 60px;
+            font-size: 1.4rem;
         }
 
         .heart {
             position: absolute;
-            top: 95px;
+            top: 90px;
             left: 145px;
             width: 30px;
             height: 30px;
@@ -161,20 +154,20 @@
         .instruction {
             position: absolute;
             bottom: 8%;
-            color: #aaa;
+            color: #ccc;
             font-size: 0.8rem;
             letter-spacing: 2px;
             text-transform: uppercase;
-            transition: opacity 0.3s;
-            pointer-events: none;
+            z-index: 1;
         }
 
-        /* Elegant scrollbar */
         .letter-content::-webkit-scrollbar { width: 5px; }
-        .letter-content::-webkit-scrollbar-thumb { background: #d2b48c; border-radius: 10px; }
+        .letter-content::-webkit-scrollbar-thumb { background: #e8d5c4; border-radius: 10px; }
     </style>
 </head>
 <body>
+
+    <div id="petal-container"></div>
 
     <div class="envelope-wrapper" id="env-wrapper">
         <div class="flap"></div>
@@ -201,6 +194,20 @@
         const wrapper = document.getElementById('env-wrapper');
         const instruction = document.querySelector('.instruction');
         
+        function createPetals() {
+            const container = document.getElementById('petal-container');
+            for (let i = 0; i < 15; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+                petal.style.left = Math.random() * 100 + 'vw';
+                petal.style.width = Math.random() * 15 + 10 + 'px';
+                petal.style.height = petal.style.width;
+                petal.style.animationDelay = Math.random() * 10 + 's';
+                container.appendChild(petal);
+            }
+        }
+        createPetals();
+
         wrapper.addEventListener('click', () => {
             if (!wrapper.classList.contains('open')) {
                 wrapper.classList.add('open');
