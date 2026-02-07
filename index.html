@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Letter For Jai</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Homemade+Apple&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&display=swap');
 
         :root {
             --bg-color: #f4f1ea; 
@@ -14,7 +14,6 @@
             --ink-color: #1a1a1a; 
             --gold-ink: #9d7c39;
             --heart-red: #a82a2a;
-            /* New High-Clarity Parchment Colors */
             --parchment-base: #f7f0e3;
             --parchment-edge: #e6dcc8;
         }
@@ -31,6 +30,27 @@
             padding: 20px;
             box-sizing: border-box;
         }
+
+        /* --- MUSIC BUTTON --- */
+        .music-toggle {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 45px;
+            height: 45px;
+            background: var(--env-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 2px solid var(--gold-ink);
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+        .music-toggle svg { fill: var(--ink-color); width: 22px; }
 
         /* --- ENVELOPE --- */
         .envelope-wrapper {
@@ -61,8 +81,8 @@
             transform: translate(-50%, -50%);
             z-index: 6;
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(1.8rem, 8vw, 2.5rem);
-            color: rgba(26, 26, 26, 0.8);
+            font-size: clamp(2rem, 8vw, 2.8rem);
+            color: rgba(26, 26, 26, 0.75);
             pointer-events: none;
         }
 
@@ -76,10 +96,9 @@
             transform-origin: top;
             transition: transform 0.6s ease-in-out;
             z-index: 6;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.1);
         }
 
-        /* --- BROKEN HEART SEAL --- */
+        /* --- HEART SEAL --- */
         .heart-container {
             position: absolute;
             top: 50%;
@@ -93,24 +112,15 @@
         }
 
         .heart-half {
-            width: 25px;
-            height: 40px;
+            width: 30px;
+            height: 45px;
             background: var(--heart-red);
+            border-radius: 30px 30px 0 0;
             transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .left-half {
-            border-radius: 25px 25px 0 0;
-            transform: rotate(-45deg);
-            transform-origin: 100% 100%;
-            border-right: 1px solid rgba(0,0,0,0.2);
-        }
-
-        .right-half {
-            border-radius: 25px 25px 0 0;
-            transform: rotate(45deg);
-            transform-origin: 0% 100%;
-        }
+        .left-half { transform: rotate(-45deg) translateX(10px); transform-origin: 100% 100%; }
+        .right-half { transform: rotate(45deg) translateX(-10px); transform-origin: 0% 100%; }
 
         .heart-container.pulse { animation: heartPulse 2s infinite; }
         @keyframes heartPulse {
@@ -118,10 +128,10 @@
             50% { transform: translate(-50%, -50%) scale(1.1); }
         }
 
-        .open .left-half { transform: rotate(-70deg) translateX(-40px) translateY(-20px); opacity: 0; }
-        .open .right-half { transform: rotate(70deg) translateX(40px) translateY(-20px); opacity: 0; }
+        .open .left-half { transform: rotate(-70deg) translateX(-50px) translateY(-20px); opacity: 0; }
+        .open .right-half { transform: rotate(70deg) translateX(50px) translateY(-20px); opacity: 0; }
 
-        /* --- CLEAR HIGH-DEF LETTER --- */
+        /* --- LETTER --- */
         .letter {
             position: absolute;
             bottom: 5%;
@@ -130,18 +140,17 @@
             height: 90%;
             z-index: 2;
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-            /* Creating the parchment effect without a blurred image */
             background: var(--parchment-base);
             background-image: 
-                radial-gradient(circle at 50% 50%, transparent 80%, rgba(210,180,140,0.2) 100%),
+                radial-gradient(circle at 50% 50%, transparent 80%, rgba(210,180,140,0.15) 100%),
                 url("https://www.transparenttextures.com/patterns/p6.png");
             box-shadow: 2px 2px 15px rgba(0,0,0,0.1);
             border: 1px solid var(--parchment-edge);
-            border-radius: 2px;
         }
 
         .letter-content {
-            font-family: 'Homemade Apple', cursive;
+            font-family: 'Dancing Script', cursive;
+            font-weight: 500;
             color: var(--ink-color);
             opacity: 0;
             transition: opacity 0.5s;
@@ -150,8 +159,7 @@
             box-sizing: border-box;
             padding: 40px;
             overflow-y: auto;
-            line-height: 1.8;
-            letter-spacing: 0.3px;
+            line-height: 1.6;
         }
 
         .close-btn {
@@ -169,10 +177,8 @@
             cursor: pointer;
             opacity: 0;
             z-index: 12;
-            transition: opacity 0.3s;
         }
 
-        /* STATE TRIGGERS */
         .open .flap { transform: rotateX(180deg); z-index: 1; }
         .open .letter { bottom: 65%; z-index: 3; }
 
@@ -183,13 +189,12 @@
             left: 50%;
             transform: translate(-50%, 50%);
             z-index: 10;
-            padding: 10px;
         }
         
-        .expanded .letter-content {
-            opacity: 1;
-            padding: clamp(30px, 8vw, 80px);
-            font-size: clamp(0.95rem, 3.5vw, 1.3rem);
+        .expanded .letter-content { 
+            opacity: 1; 
+            padding: clamp(30px, 8vw, 80px); 
+            font-size: clamp(1.2rem, 5vw, 1.8rem); 
         }
         .expanded .close-btn { opacity: 1; }
 
@@ -202,34 +207,36 @@
             text-transform: uppercase;
             font-weight: bold;
             opacity: 0.7;
-            pointer-events: none;
         }
 
-        /* Ambient Petals */
         .petal {
             position: absolute;
             background-color: #ffdae0;
             border-radius: 150% 0 150% 0;
             opacity: 0.4;
             z-index: 0;
-            pointer-events: none;
             animation: float 10s infinite linear;
         }
         @keyframes float {
             0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.4; }
-            90% { opacity: 0.4; }
             100% { transform: translateY(110vh) translateX(100px) rotate(360deg); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="music-toggle" id="music-toggle">
+        <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+    </div>
+
     <div id="petal-container"></div>
 
     <div class="envelope-wrapper" id="env-wrapper">
         <div class="flap"></div>
-        
         <div class="heart-container pulse" id="heart-seal">
             <div class="heart-half left-half"></div>
             <div class="heart-half right-half"></div>
@@ -238,12 +245,12 @@
         <div class="letter" id="letter">
             <div class="close-btn" id="close-btn">&times;</div>
             <div class="letter-content">
-                <p>My Dearest Jai,</p>
+                <p style="font-size: 1.2em; font-weight: 700;">My Dearest Jai,</p>
                 <p>I wanted to write this to tell you how much you truly mean to me. Sometimes it’s hard to find the right words in the moment, so I thought I’d put them here, where they can stay forever.</p>
                 <p>Ever since you came into my life, everything has felt a little brighter. I love the way we talk for hours, the way you laugh, and even the quiet moments we share. You are my best friend and my greatest adventure.</p>
-                <p>No matter where life takes us, I want you to know that I am always in your corner. Thank you for being exactly who you are. You are loved more than words on a page could ever express.</p>
+                <p>No matter where life takes us, I want you to know that I am always in your corner. Thank you for being exactly who you are.</p>
                 <p>With all my love,</p>
-                <p style="font-size: 1.5em; margin-top: 30px;">[Your Name]</p>
+                <p style="font-size: 1.6em; margin-top: 30px; font-weight: 700;">[Your Name]</p>
             </div>
         </div>
         <div class="envelope"></div>
@@ -255,7 +262,15 @@
         const wrapper = document.getElementById('env-wrapper');
         const closeBtn = document.getElementById('close-btn');
         const heartSeal = document.getElementById('heart-seal');
+        const musicToggle = document.getElementById('music-toggle');
+        const bgMusic = document.getElementById('bg-music');
         
+        musicToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (bgMusic.paused) { bgMusic.play(); musicToggle.style.opacity = "1"; }
+            else { bgMusic.pause(); musicToggle.style.opacity = "0.6"; }
+        });
+
         function createPetals() {
             const container = document.getElementById('petal-container');
             for (let i = 0; i < 15; i++) {
