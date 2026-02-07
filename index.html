@@ -13,6 +13,7 @@
             --env-dark: #b8977d;
             --env-flap: #c2a38a;
             --ink-color: #4a3728;
+            --gold-ink: #9d7c39;
         }
 
         body {
@@ -24,6 +25,8 @@
             background-color: var(--bg-color);
             overflow: hidden;
             perspective: 1200px;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         /* Ambient Petals */
@@ -42,10 +45,12 @@
             100% { transform: translateY(110vh) translateX(100px) rotate(360deg); opacity: 0; }
         }
 
+        /* --- RESPONSIVE WRAPPER --- */
         .envelope-wrapper {
             position: relative;
-            width: 350px;
-            height: 230px;
+            width: 90vw;
+            max-width: 350px;
+            aspect-ratio: 35 / 23; /* Maintains shape across devices */
             cursor: pointer;
             transition: transform 0.6s ease;
             z-index: 5;
@@ -66,53 +71,55 @@
             align-items: center;
         }
 
-        /* "To: Jai" on front */
+        /* "To: Jai" in Gold Calligraphy */
         .envelope::after {
             content: "To: Jai";
             position: absolute;
             z-index: 6;
             font-family: 'Dancing Script', cursive;
-            font-size: 1.8rem;
-            color: rgba(74, 55, 40, 0.6);
+            font-size: clamp(1.2rem, 5vw, 1.8rem);
+            color: var(--gold-ink);
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
             transform: translateY(20px);
+            opacity: 0.8;
         }
 
         .envelope::before {
             content: "";
             position: absolute;
             z-index: 5;
-            width: 0; height: 0;
-            border-top: 115px solid transparent;
-            border-right: 175px solid var(--env-color);
-            border-bottom: 115px solid var(--env-color);
-            border-left: 175px solid var(--env-color);
-            filter: drop-shadow(0 -2px 4px rgba(0,0,0,0.1));
+            width: 100%;
+            height: 100%;
+            /* Uses linear gradients for responsive triangles instead of fixed borders */
+            background: 
+                linear-gradient(to top right, var(--env-color) 48%, transparent 50%),
+                linear-gradient(to top left, var(--env-color) 48%, transparent 50%),
+                linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.05) 100%);
         }
 
         .flap {
             position: absolute;
             top: 0;
-            width: 0; height: 0;
-            border-left: 175px solid transparent;
-            border-right: 175px solid transparent;
-            border-top: 120px solid var(--env-flap);
+            width: 100%;
+            height: 55%; /* Halfway down */
+            background-color: var(--env-flap);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
             transform-origin: top;
             transition: transform 0.6s ease-in-out, z-index 0.3s;
             z-index: 6;
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
         }
 
-        /* --- THE LETTER (FIXED EDGES) --- */
+        /* --- THE LETTER --- */
         .letter {
             position: absolute;
-            bottom: 5px;
-            left: 15px;
-            width: 320px;
-            height: 200px;
+            bottom: 5%;
+            left: 5%;
+            width: 90%;
+            height: 85%;
             z-index: 2;
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.1);
             
-            /* The Magic Trick: This cuts off the digital white border */
             background-image: url('old-letter-1.png');
             background-size: cover;
             background-position: center;
@@ -132,19 +139,18 @@
             height: 100%;
             width: 100%;
             box-sizing: border-box;
-            padding: 35px; 
+            padding: 8%; /* Percentage based padding */
             overflow-y: auto;
         }
 
         /* OPEN STATES */
         .open .flap { transform: rotateX(180deg); z-index: 1; }
-        .open .letter { bottom: 130px; z-index: 3; }
+        .open .letter { bottom: 60%; z-index: 3; }
 
-        /* EXPANDED STATE */
+        /* EXPANDED STATE (Mobile Friendly) */
         .expanded .letter {
-            width: 90vw;
-            max-width: 650px;
-            height: 85vh;
+            width: 95vw;
+            height: 90vh;
             bottom: 50%;
             left: 50%;
             transform: translate(-50%, 50%);
@@ -156,20 +162,20 @@
         
         .expanded .letter-content {
             opacity: 1;
-            padding: 60px 70px; /* Centering the text on the stenciled paper */
-            font-size: 1.5rem;
+            padding: clamp(30px, 10%, 80px); /* Responsive padding */
+            font-size: clamp(1rem, 4vw, 1.6rem); /* Responsive text */
         }
 
         /* Pulse Heart Seal */
         .heart {
             position: absolute;
-            top: 100px;
-            left: 160px;
+            top: 45%;
+            left: 50%;
             width: 30px;
             height: 30px;
             background: #a82a2a;
             z-index: 7;
-            transform: rotate(45deg);
+            transform: translate(-50%, -50%) rotate(45deg);
             transition: transform 0.5s, opacity 0.4s;
             box-shadow: 1px 2px 8px rgba(0,0,0,0.3);
             animation: pulse 2s infinite;
@@ -186,26 +192,27 @@
         .heart::after { top: -15px; }
 
         @keyframes pulse {
-            0% { transform: rotate(45deg) scale(1); }
-            50% { transform: rotate(45deg) scale(1.1); }
-            100% { transform: rotate(45deg) scale(1); }
+            0% { transform: translate(-50%, -50%) rotate(45deg) scale(1); }
+            50% { transform: translate(-50%, -50%) rotate(45deg) scale(1.1); }
+            100% { transform: translate(-50%, -50%) rotate(45deg) scale(1); }
         }
 
-        .open .heart { opacity: 0; transform: rotate(45deg) scale(0); }
+        .open .heart { opacity: 0; transform: translate(-50%, -50%) rotate(45deg) scale(0); }
 
         .instruction {
             position: absolute;
-            bottom: 8%;
+            bottom: 5%;
             color: #8c6a50;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             letter-spacing: 2px;
             text-transform: uppercase;
             font-weight: bold;
             opacity: 0.6;
             z-index: 1;
+            text-align: center;
         }
 
-        .letter-content::-webkit-scrollbar { width: 5px; }
+        .letter-content::-webkit-scrollbar { width: 4px; }
         .letter-content::-webkit-scrollbar-thumb { background: #d2b48c; border-radius: 10px; }
     </style>
 </head>
@@ -226,13 +233,13 @@
                 <p>No matter where life takes us, I want you to know that I am always in your corner. Thank you for being exactly who you are. You are loved more than words on a page could ever express.</p>
                 
                 <p>With all my love,</p>
-                <p style="font-size: 2rem; margin-top: 20px;">[Your Name]</p>
+                <p style="font-size: 1.5em; margin-top: 20px;">[Your Name]</p>
             </div>
         </div>
         <div class="envelope"></div>
     </div>
 
-    <div class="instruction">Click to Open Heart</div>
+    <div class="instruction">Tap to Open Heart</div>
 
     <script>
         const wrapper = document.getElementById('env-wrapper');
@@ -240,11 +247,11 @@
         
         function createPetals() {
             const container = document.getElementById('petal-container');
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 15; i++) {
                 const petal = document.createElement('div');
                 petal.className = 'petal';
                 petal.style.left = Math.random() * 100 + 'vw';
-                petal.style.width = Math.random() * 15 + 10 + 'px';
+                petal.style.width = Math.random() * 10 + 10 + 'px';
                 petal.style.height = petal.style.width;
                 petal.style.animationDelay = Math.random() * 10 + 's';
                 petal.style.animationDuration = (Math.random() * 5 + 8) + 's';
@@ -256,14 +263,14 @@
         wrapper.addEventListener('click', () => {
             if (!wrapper.classList.contains('open')) {
                 wrapper.classList.add('open');
-                instruction.innerText = "Click letter to read";
+                instruction.innerText = "Tap letter to read";
             } else if (!wrapper.classList.contains('expanded')) {
                 wrapper.classList.add('expanded');
                 instruction.style.opacity = "0";
             } else {
                 wrapper.classList.remove('expanded');
                 wrapper.classList.remove('open');
-                instruction.innerText = "Click to Open Heart";
+                instruction.innerText = "Tap to Open Heart";
                 instruction.style.opacity = "0.6";
             }
         });
