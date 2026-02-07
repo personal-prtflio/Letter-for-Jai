@@ -8,10 +8,10 @@
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&display=swap');
 
         :root {
-            --bg-color: #f4f1ec; /* Creamy off-white background */
-            --env-color: #d1b399; /* Base paper color */
-            --env-dark: #b8977d; /* Shadowed fold color */
-            --env-flap: #c2a38a; /* Top flap color */
+            --bg-color: #f0ebe3; 
+            --env-color: #d1b399;
+            --env-dark: #b8977d;
+            --env-flap: #c2a38a;
             --ink-color: #5a4638;
         }
 
@@ -23,7 +23,7 @@
             align-items: center;
             background-color: var(--bg-color);
             overflow: hidden;
-            perspective: 1000px;
+            perspective: 1200px;
         }
 
         /* Ambient Petals */
@@ -51,23 +51,20 @@
             z-index: 5;
         }
 
-        .envelope-wrapper:hover {
-            transform: translateY(-5px) rotate(1deg);
-        }
-
-        /* The Main Envelope Body */
+        /* --- ENVELOPE BODY --- */
         .envelope {
             position: relative;
             width: 100%;
             height: 100%;
             background-color: var(--env-color);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            /* Texture Overlay: Simulates grainy paper */
+            background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12), inset 0 0 100px rgba(0,0,0,0.05);
             z-index: 4;
-            overflow: hidden;
-            border-radius: 2px;
+            border-radius: 3px;
         }
 
-        /* Realistic Folds using gradients */
+        /* Side & Bottom Folds with realistic shadows */
         .envelope::before {
             content: "";
             position: absolute;
@@ -77,10 +74,10 @@
             border-right: 175px solid var(--env-color);
             border-bottom: 115px solid var(--env-color);
             border-left: 175px solid var(--env-color);
-            filter: drop-shadow(0 -2px 3px rgba(0,0,0,0.05));
+            filter: drop-shadow(0 -2px 4px rgba(0,0,0,0.1));
         }
 
-        /* Top Flap with realistic shadow */
+        /* Top Flap */
         .flap {
             position: absolute;
             top: 0;
@@ -89,12 +86,13 @@
             border-right: 175px solid transparent;
             border-top: 120px solid var(--env-flap);
             transform-origin: top;
-            transition: transform 0.5s ease, z-index 0.3s;
+            transition: transform 0.6s ease-in-out, z-index 0.3s;
             z-index: 6;
-            filter: drop-shadow(0 4px 5px rgba(0,0,0,0.1));
+            /* Texture on flap */
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
         }
 
-        /* THE LETTER */
+        /* --- THE LETTER --- */
         .letter {
             position: absolute;
             bottom: 5px;
@@ -107,40 +105,37 @@
             background-position: center;
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.1);
             z-index: 2;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            
+            /* Rounded corners for the "peek" */
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
         }
 
         .letter-content {
             font-family: 'Dancing Script', cursive;
-            font-size: 1.1rem;
-            line-height: 1.6;
             color: var(--ink-color);
             opacity: 0;
             transition: opacity 0.5s;
             height: 100%;
             width: 100%;
             box-sizing: border-box;
-            padding: 30px; 
+            padding: 35px; 
             overflow-y: auto;
         }
 
-        /* States */
+        /* OPEN STATES */
         .open .flap {
             transform: rotateX(180deg);
             z-index: 1;
-            filter: none;
         }
         
         .open .letter {
-            bottom: 130px;
+            bottom: 130px; /* Peek position */
             z-index: 3;
         }
 
-        .open .heart {
-            transform: rotate(45deg) translateY(-20px) scale(0);
-            opacity: 0;
-        }
-
+        /* EXPANDED STATE */
         .expanded .letter {
             width: 90vw;
             max-width: 650px;
@@ -149,9 +144,8 @@
             left: 50%;
             transform: translate(-50%, 50%);
             z-index: 10;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            background-size: 100% 100%; 
+            background-size: 100% 100%;
+            border-radius: 5px; /* Subtle rounding for full screen */
         }
         
         .expanded .letter-content {
@@ -160,7 +154,7 @@
             font-size: 1.4rem;
         }
 
-        /* Realistic Wax Seal Heart */
+        /* Pulse Heart Seal */
         .heart {
             position: absolute;
             top: 100px;
@@ -171,7 +165,8 @@
             z-index: 7;
             transform: rotate(45deg);
             transition: transform 0.5s, opacity 0.4s;
-            box-shadow: 1px 2px 5px rgba(0,0,0,0.3), inset 0 0 10px rgba(0,0,0,0.2);
+            box-shadow: 1px 2px 8px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
         }
         .heart::before, .heart::after {
             content: "";
@@ -180,10 +175,21 @@
             height: 30px;
             background: #a82a2a;
             border-radius: 50%;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
         }
         .heart::before { left: -15px; }
         .heart::after { top: -15px; }
+
+        @keyframes pulse {
+            0% { transform: rotate(45deg) scale(1); }
+            50% { transform: rotate(45deg) scale(1.1); }
+            100% { transform: rotate(45deg) scale(1); }
+        }
+
+        .open .heart {
+            animation: none;
+            opacity: 0;
+            transform: rotate(45deg) scale(0);
+        }
 
         .instruction {
             position: absolute;
@@ -192,7 +198,6 @@
             font-size: 0.8rem;
             letter-spacing: 2px;
             text-transform: uppercase;
-            z-index: 1;
             font-weight: bold;
             opacity: 0.6;
         }
